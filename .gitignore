@@ -21,6 +21,9 @@ go.work
 
 ## Ignore TypeScript Files
 #
+# Json
+.json
+
 # Logs
 logs
 *.log
