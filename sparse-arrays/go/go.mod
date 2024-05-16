@@ -1,3 +1,3 @@
-module github.com/jesbalchiero/hackerhank/sparse-arrays/go
+module github.com/jesbalchiero/hackerrank/sparse-arrays/go
 
 go 1.21.6

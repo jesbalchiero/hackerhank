@@ -1,3 +1,3 @@
-module github.com/jesbalchiero/hackerhank/time-conversion/go
+module github.com/jesbalchiero/hackerrank/time-conversion/go
 
 go 1.21.6
