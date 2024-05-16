@@ -1,3 +1,3 @@
-module github.com/jesbalchiero/hackerhank/divisible-sum-pairs
+module github.com/jesbalchiero/hackerrank/divisible-sum-pairs
 
 go 1.21.6
