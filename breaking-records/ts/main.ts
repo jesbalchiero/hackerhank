@@ -61,7 +61,10 @@ function breakingRecords(scores: number[]): number[] {
 }
 
 function main() {
-    const ws: WriteStream = createWriteStream(process.env['OUTPUT_PATH']);
+    const outputPath = process.env['OUTPUT_PATH'];
+    if (!outputPath) throw new Error('OUTPUT_PATH environment variable is not defined');
+    
+    const ws: WriteStream = createWriteStream(outputPath);
 
     const n: number = parseInt(readLine().trim(), 10);
 
