@@ -1,65 +1,46 @@
-'use strict';
+import * as readline from 'readline';
 
-process.stdin.resume();
-process.stdin.setEncoding('utf-8');
-let inputString: string = '';
-let inputLines: string[] = [];
-let currentLine: number = 0;
-
-process.stdin.on('data', function(inputStdin: string): void {
-    inputString += inputStdin;
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
 });
 
-process.stdin.on('end', function(): void {
-    inputLines = inputString.split('\n');
-    inputString = '';
-    main();
-});
-
-function readLine(): string {
-    return inputLines[currentLine++];
-}
-
-function main(): void {
-    while (currentLine < inputLines.length) {
-        const operation: string = readLine().trim();  // e.g., "C V variableName"
-        if (operation) {
-            const parts: string[] = operation.split(';');
-            const type: string = parts[0]; // C (Create) or S (Split)
-            const format: string = parts[1]; // V (Variable), M (Method), or C (Class)
-            const input: string = parts.slice(2).join(' '); // the actual string
-
-            if (type === 'C') 
-                console.log(createCamelCase(input, format)); // Creating Camel Case
-            else if (type === 'S')
-                console.log(splitCamelCase(input));// Splitting Camel Case
+function split(t: string, inputString: string): string[] {
+    let string = inputString[0].toUpperCase() + inputString.slice(1);
+    if (t === 'M') {
+        string = string.slice(0, -2);
+    }
+    let workingString = string;
+    let words: string[] = [];
+    for (let index = string.length - 1; index >= 0; index--) {
+        const letter = string[index];
+        if (letter.toUpperCase() === letter) {
+            words.unshift(workingString.substring(index));
+            workingString = workingString.substring(0, index);
         }
     }
+    return words.map(word => word.toLowerCase());
 }
 
-// Function to create Camel Case from a string based on the format (Variable, Method, Class)
-function createCamelCase(input: string, format: string): string {
-    const words: string[] = input.split(' ');
-    let camelCaseStr: string = '';
-
-    if (format === 'C') {
-        // Class name
-        camelCaseStr = words.map((word: string) => capitalize(word)).join('');
-    } else {
-        // Variable or method name
-        camelCaseStr = words[0].toLowerCase() + words.slice(1).map((word: string) => capitalize(word)).join('');
-        if (format === 'M') camelCaseStr += '()'; // Append "()" for method
+function combine(t: string, inputString: string): string[] {
+    let words = inputString.split(' ');
+    words = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    if (t === 'M' || t === 'V') {
+        words[0] = words[0].charAt(0).toLowerCase() + words[0].slice(1);
     }
-
-    return camelCaseStr;
+    if (t === 'M') {
+        words.push("()");
+    }
+    return words;
 }
 
-// Function to split a Camel Case string into words
-function splitCamelCase(input: string): string {
-    return input.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase();
-}
-
-// Helper function to capitalize the first letter of a word
-function capitalize(word: string): string {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-}
+rl.on('line', (line) => {
+    const [operation, stringType, string] = line.split(';');
+    if (operation === 'S') {
+        const output = split(stringType, string);
+        console.log(output.join(' '));
+    } else if (operation === 'C') {
+        const output = combine(stringType, string);
+        console.log(output.join(''));
+    }
+});
